@@ -13,12 +13,12 @@
         $(function () {
             var $body = $('body');
             $body.on('submit', 'form[name=team_clarification]', function () {
-                return confirm("Send clarification request to Jury?");
+                return confirm("Enviar pedido de esclarecimento ao Júri?");
             });
 
             window.replaceClarificationReplyButton = function() {
                 var $replyButton = $('#clarification-reply-button');
-                var $submitButton = $('<button type="submit" name="submit" class="btn btn-primary"><i class="fas fa-envelope"></i> Send</button>');
+                var $submitButton = $('<button type="submit" name="submit" class="btn btn-primary"><i class="fas fa-envelope"></i> Enviar</button>');
                 $replyButton.replaceWith($submitButton);
 
                 $submitButton.on('click', function() {
@@ -32,8 +32,7 @@
             $body.on('click', '#clarification-reply-button', function() {
                 replaceClarificationReplyButton();
             });
-
-            /* Show the notification options if the browser supports it */
+            /* Mostrar as opções de notificação se o navegador suportar */
             if ('Notification' in window) {
                 $('#notify_disable').click(disableNotifications);
                 $('#notify_enable').click(enableNotifications);

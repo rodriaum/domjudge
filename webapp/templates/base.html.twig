@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
-    <!-- DOMjudge version {{ DOMJUDGE_VERSION }} -->
+    <!-- DOMjudge versão {{ DOMJUDGE_VERSION }} -->
     <meta charset="{{ DJ_CHARACTER_SET }}">
     <title>{% block title %}DOMjudge{% endblock %}</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}">
@@ -48,13 +48,13 @@
     {% endif %}
     var markdownPreviewUrl = "{{ path('markdown_preview') }}";
     $(function () {
-        /* toggle refresh if set */
+        /* alternar atualização se definido */
         {% if refresh is defined and refresh %}
         $('#refresh-navitem').on('click', function () {
             toggleRefresh('{{ refresh.url | raw }}', {{ refresh.after }}, {{ refresh.ajax | default(0) }});
         });
         {% endif %}
-        /* Enable page refresh if set if wanted by the page, and wanted by the user */
+        /* Ativar atualização da página se definido, se desejado pela página e pelo utilizador */
         {% if refresh is defined and refresh and refresh_flag %}
         enableRefresh('{{ refresh.url | raw }}', {{ refresh.after }}, {{ refresh.ajax | default(0) }});
         {% endif %}

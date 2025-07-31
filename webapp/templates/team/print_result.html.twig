@@ -1,6 +1,6 @@
 {% extends "team/base.html.twig" %}
 
-{% block title %}{{ parent() }} - Print{% endblock %}
+{% block title %}{{ parent() }} - Imprimir{% endblock %}
 
 {% block extrahead %}
     {{ parent() }}
@@ -9,19 +9,19 @@
 {% block content %}
 
     <div class="container pt-5">
-        <h1 class="text-center">Print source</h1>
+        <h1 class="text-center">Imprimir código-fonte</h1>
 
         <pre class="output_text m-3">
 {{ output }}
 </pre>
 
         {% if success %}
-            <div class="alert alert-success">File has been printed</div>
+            <div class="alert alert-success">O ficheiro foi impresso</div>
         {% else %}
-            <div class="alert alert-danger">Error while printing. Contact staff.</div>
+            <div class="alert alert-danger">Erro ao imprimir. Contacte a equipa.</div>
         {% endif %}
 
-        <a href="./" class="btn btn-secondary mt-3">Close</a>
+        <a href="./" class="btn btn-secondary mt-3">Fechar</a>
     </div>
 
 {% endblock %}

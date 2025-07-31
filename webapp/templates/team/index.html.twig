@@ -32,7 +32,6 @@
 {% block extrafooter %}
     <script>
         var $flash = null;
-
         function saveFlash() {
             $flash = $('[data-flash-messages]').children();
         }
@@ -54,8 +53,7 @@
 
         function markSeen($elem) {
             $elem.closest('tr').removeClass('unseen');
-
-            // Also preview the clarification reply
+            // Também pré-visualizar a resposta de esclarecimento
             setupPreviewClarification($('#team_clarification_message') , $('#messagepreview'), true);
         }
     </script>
