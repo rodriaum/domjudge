@@ -1,65 +1,68 @@
-{# Render a list of balloons for a jury page #}
-{# @var \App\Entity\Balloon balloonfoo #}
-
-{% if balloons is empty %}
-    <div class="alert alert-warning">No balloons</div>
-{% else %}
-    <table class="data-table table table-hover table-striped table-sm balloons-table" style="width:auto">
-        <thead class="thead-light">
-        <tr>
-            <th scope="col">&nbsp;</th>
-            <th scope="col">ID</th>
-            <th scope="col">time</th>
-            <th scope="col">solved</th>
-            <th scope="col">team</th>
-            <th scope="col">affiliation</th>
-            <th scope="col">location</th>
-            <th scope="col">category</th>
-            <th scope="col">total</th>
-            <th scope="col">awards</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-        {%- for balloon in balloons %}
-            <tr class="{% if balloon.data.done %}disabled{% endif %}"
-                data-affiliation-id="{{ balloon.data.affiliationid }}"
-                data-location-str="{{ balloon.data.location }}"
-                data-category-id="{{ balloon.data.categoryid }}">
-                <td>
-                {%- if balloon.data.done -%}
-                    <i class="far fa-check-circle"></i>
-                {%- else -%}
-                    <i class="far fa-hourglass"></i>
-                {%- endif -%}
-                <td>{{ balloon.data.balloonid }}</td>
-                <td data-order="{{ balloon.data.time }}">{{ balloon.data.time | printtime }}</td>
-                <td>{{ balloon.data.contestproblem | problemBadge }}</td>
-                <td>
-                    {{ balloon.data.team | entityIdBadge('t') }}
-                    {{ balloon.data.team.effectiveName | u.truncate(teamname_max_length, '…') }}
-                </td>
-                <td>{{ balloon.data.affiliation }}</td>
-                <td>{{ balloon.data.location }}</td>
-                <td>{{ balloon.data.category }}</td>
-                <td>
-                {%- for totalballoon in balloon.data.total -%}
-                    {{ totalballoon | problemBadge }}&nbsp;
-                {%- endfor -%}
-                </td>
-                <td>{{ balloon.data.awards }}</td>
-                <td>
-                    {%- if not balloon.data.done -%}
-                    {%- set link = path('jury_balloons_setdone', {balloonId: balloon.data.balloonid}) %}
-                    <a href="{{ link }}" title="mark balloon as done">
-                    <i class="fas fa-running"></i>
-                    </a>
-                </td>
-                {%- endif -%}
-            </tr>
-        {%- endfor %}
-
-        </tbody>
-    </table>
-
-{% endif %}
+<div class="card mb-3">
+    <div class="card-header">
+        Baluões
+    </div>
+    <div class="card-body">
+        {% if current_contest.balloon_style == 'per_language' %}
+            <div class="alert alert-info">
+                Este concurso tem balões por linguagem. Balões serão mostrados para cada linguagem que uma equipa utilizou para resolver um problema.
+            </div>
+        {% endif %}
+        {% if balloons is empty %}
+            <div class="alert alert-info">
+                Não há balões para mostrar.
+            </div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-sm table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Enviar ID</th>
+                        <th scope="col">Equipa</th>
+                        <th scope="col">Problema</th>
+                        <th scope="col">Linguagem</th>
+                        <th scope="col">Estado</th>
+                        {% if showFlags %}
+                            <th scope="col">Bandeiras</th>
+                        {% endif %}
+                        <th scope="col">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for balloon in balloons %}
+                        <tr class="{{ balloon.css_class }}">
+                            <td><a href="{{ path('jury_submission', {'submitId': balloon.submitid}) }}">{{ balloon.submitid }}</a></td>
+                            <td><a href="{{ path('jury_team', {'teamId': balloon.teamid}) }}">{{ balloon.teamname }}</a></td>
+                            <td><a href="{{ path('jury_problem', {'probId': balloon.probid}) }}">{{ balloon.problemname }}</a></td>
+                            <td><a href="{{ path('jury_language', {'langId': balloon.langid}) }}">{{ balloon.langname }}</a></td>
+                            <td>{{ balloon.state }}</td>
+                            {% if showFlags %}
+                                <td>
+                                    {% if not balloon.done %}
+                                        <i class="fas fa-flag text-danger"></i>
+                                    {% endif %}
+                                    {% if balloon.done and balloon.sortorder > 0 %}
+                                        <i class="fas fa-flag text-success"></i>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            <td>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <form action="{{ path('jury_balloons_set_done', {'balloonId': balloon.balloonid}) }}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-success">Marcar como feito</button>
+                                    </form>
+                                {% endif %}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <form action="{{ path('jury_balloons_set_undone', {'balloonId': balloon.balloonid}) }}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-warning">Marcar como não feito</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</div>

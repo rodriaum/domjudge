@@ -48,14 +48,14 @@
         <h2>{{ queues[queue] }}</h2>
         <table class="table">
             <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Contest time</th>
-                <th scope="col">From</th>
-                <th scope="col">To</th>
-                <th scope="col">Subject</th>
-                <th scope="col">Answered?</th>
-            </tr>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Tempo do Concurso</th>
+                    <th scope="col">De</th>
+                    <th scope="col">Para</th>
+                    <th scope="col">Assunto</th>
+                    <th scope="col">Respondido?</th>
+                </tr>
             </thead>
             <tbody>
             {% for clarification in clarifications %}
@@ -66,57 +66,69 @@
                         {% if clarification.sender %}
                             {{ clarification.sender.effectiveName }} {{ clarification.sender | entityIdBadge('t') }}
                         {% else %}
-                            Jury ({{ clarification.juryMember }})
+                            Júri
                         {% endif %}
                     </td>
                     <td>
-                        {% if clarification.recipient and clarification.sender is empty %}
+                        {% if clarification.recipient %}
                             {{ clarification.recipient.effectiveName }} {{ clarification.recipient | entityIdBadge('t') }}
-                        {% elseif clarification.sender %}
-                            Jury
                         {% else %}
-                            All
+                            Público
                         {% endif %}
                     </td>
                     <td>
                         {% if clarification.problem %}
-                            {{ problems[clarification.problem.probid].shortName }}: {{ clarification.problem.name }}
-                        {% elseif clarification.category and categories[clarification.category] is defined %}
-                            {{ categories[clarification.category] }}
-                        {% else %}
-                            General
+                            P: {{ clarification.problem.externalid }} -
                         {% endif %}
+                        {{ clarification.subject }}
                     </td>
                     <td>
-                        {{ clarification.answered | printYesNo }}
+                        {% if clarification.answered %}
+                            Sim
+                        {% else %}
+                            Não
+                        {% endif %}
                     </td>
                 </tr>
                 <tr>
-                    <td><b>Content</b></td>
+                    <td>&nbsp;</td>
                     <td colspan="5">
-                        <div class="card-text">{{ clarification.body | markdown_to_html | sanitize_html('app.clarification_sanitizer') }}</div>
+                        <pre class="output_text">{{ clarification.message }}</pre>
                     </td>
                 </tr>
-                {% if clarification.replies is not empty %}
-                    {% for idx, reply in clarification.replies %}
-                        <tr>
-                            <td>
-                                <b>
-                                    {% if clarification.replies.count > 1 %}
-                                        Reply #{{ idx + 1 }}
-                                    {% else %}
-                                        Reply
-                                    {% endif %}
-                                </b>
-                            </td>
-                            <td colspan="5">
-                                <div class="card-text">{{ reply.body | markdown_to_html | sanitize_html('app.clarification_sanitizer') }}</div>
-                            </td>
-                        </tr>
-                    {% endfor %}
+                {% if clarification.responses|length > 0 %}
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td colspan="5">
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Resposta de</th>
+                                    <th scope="col">Tempo</th>
+                                    <th scope="col">Mensagem</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for response in clarification.responses %}
+                                    <tr>
+                                        <td>
+                                            {% if response.sender %}
+                                                {{ response.sender.effectiveName }} {{ response.sender | entityIdBadge('t') }}
+                                            {% else %}
+                                                Júri
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ response.submitTime | printtime(null, contest) }}</td>
+                                        <td><pre class="output_text">{{ response.message }}</pre></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
                 {% endif %}
             {% endfor %}
             </tbody>
         </table>
     {% endfor %}
-{% endblock %}
+{% endblock %}  

@@ -1,9 +1,10 @@
 {% extends "jury/base.html.twig" %}
 
-{% block title %}Analysis - Languages in {{ current_contest.shortname | default('') }} - {{ parent() }}{% endblock %}
+{% block title %}Análise - Linguagens em {{ current_contest.shortname |
+default('') }} - {{ parent() }}{% endblock %}
 
 {% block content %}
-    <h1>Language stats</h1>
+    <h1>Estatísticas de Linguagem</h1>
     {% include 'jury/partials/analysis_filter.html.twig' %}
 
     <div class="row">
@@ -14,7 +15,7 @@
                         {{ language.name }}
                     </div>
                     <div class="card-body">
-                        <i class="fas fa-users fa-fw"></i> {{ language.team_count }} team{% if language.team_count != 1 %}s{% endif %}
+                        <i class="fas fa-users fa-fw"></i> {{ language.team_count }} equipa{% if language.team_count != 1 %}s{% endif %}
                         {% if language.team_count > 0 %}
                             <div class="btn-group" role="group">
                                 <input type="checkbox"
@@ -23,59 +24,51 @@
                                        data-team-list-container="#team-list-{{ langid }}"
                                        autocomplete="off" />
                                 <label for="team-list-toggle-{{ langid }}" class="btn-sm btn btn-outline-secondary">
-                                    <i class="fas fa-eye"></i> Show
+                                    <i class="fas fa-eye"></i> Mostrar
                                 </label>
                             </div>
-                            <div class="card mt-2 mb-2 d-none" id="team-list-{{ langid }}">
+                            <div class="card mt-2 mb-2 d-none team-list-container" id="team-list-{{ langid }}">
                                 <div class="card-body">
-                                    <table class="table table-striped table-hover">
-                                        <thead>
-                                        <tr>
-                                            <td colspan="2">Team</td>
-                                            <td>Number of solved problems in {{ language.name }}</td>
-                                            <td>Total attempts in {{ language.name }}</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for team in language.teams %}
-                                            <tr>
-                                                <td>
-                                                    <a href="{{ path('jury_team', {'teamId': team.team.teamid}) }}">
-                                                        {{ team.team | entityIdBadge('t') }}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a href="{{ path('jury_team', {'teamId': team.team.teamid}) }}">
-                                                        {{ team.team.effectiveName }}
-                                                    </a>
-                                                </td>
-                                                <td>{{ team.solved }}</td>
-                                                <td>{{ team.total }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
+                                    {% for team in language.teams %}
+                                        <a href="{{ path('jury_team', {teamId: team.teamid}) }}">
+                                            {{ team | teamName(null, false) }}
+                                        </a><br/>
+                                    {% endfor %}
                                 </div>
                             </div>
                         {% endif %}
-                        <br/>
-                        <i class="fas fa-file-code fa-fw"></i> {{ language.total }} total submission{% if language.total != 1 %}s{% endif %}
-                        for {{ language.problems_attempted_count }} problem{% if language.problems_attempted_count != 1 %}s{% endif %}:<br/>
-                        {% for problem in problems %}
-                            <a href="{{ path('jury_problem', {'probId': problem.probid}) }}">
-                                {{ problem | problemBadge(language.problems_attempted[problem.probid] is not defined) }}
-                            </a>
-                        {% endfor %}
-                        <br />
-                        <i class="fas fa-check fa-fw"></i> {{ language.solved }} submission{% if language.solved != 1 %}s{% endif %} solved problems
-                        for {{ language.problems_solved_count }} problem{% if language.problems_solved_count != 1 %}s{% endif %}:<br/>
-                        {% for problem in problems %}
-                            <a href="{{ path('jury_problem', {'probId': problem.probid}) }}">
-                                {{ problem | problemBadge(language.problems_solved[problem.probid] is not defined) }}
-                            </a>
-                        {% endfor %}
-                        <br />
-                        <i class="fas fa-xmark fa-fw"></i> {{ language.not_solved }} submission{% if language.not_solved != 1 %}s{% endif %} did not solve a problem<br />
+                        <table class="table table-sm table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID do Problema</th>
+                                <th scope="col">Nome do Problema</th>
+                                <th scope="col">Tentativas</th>
+                                <th scope="col">Soluções</th>
+                                <th scope="col">Equipas Tentadas</th>
+                                <th scope="col">Equipas Resolvidas</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for problem in language.problems %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path('jury_problem', {probId: problem.problem.probid}) }}">
+                                            {{ problem.problem.probid }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('jury_problem', {probId: problem.problem.probid}) }}">
+                                            {{ problem.problem | problemBadge }} {{ problem.problem.name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ problem.attempts }}</td>
+                                    <td>{{ problem.solutions }}</td>
+                                    <td>{{ problem.teams_attempted }}</td>
+                                    <td>{{ problem.teams_solved }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -85,16 +78,10 @@
 
 {% block extrafooter %}
     <script>
-        $('.team-list-toggle').on('change', function () {
-            const $container = $($(this).data('team-list-container'));
-            const $label = $(this).parent().find('label');
-            if ($(this).is(':checked')) {
-                $container.removeClass('d-none');
-                $label.html('<i class="fas fa-eye-slash"></i> Hide');
-            } else {
-                $container.addClass('d-none');
-                $label.html('<i class="fas fa-eye"></i> Show');
-            }
+        $(function() {
+            $('.team-list-toggle').on('change', function() {
+                $($(this).data('team-list-container')).collapse('toggle');
+            });
         });
     </script>
 {% endblock %}

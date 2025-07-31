@@ -1,6 +1,6 @@
 {% extends "jury/base.html.twig" %}
 
-{% block title %}Analysis - Contest {{ current_contest.shortname | default('') }} - {{ parent() }}{% endblock %}
+{% block title %}Análise - Concurso {{ current_contest.shortname | default('') }} - {{ parent() }}{% endblock %}
 
 {% block extrahead %}
 {{ parent() }}
@@ -41,29 +41,29 @@ $(function() {
     <div class="col-md-3 mt-3">
       <div class="card">
         <div class="card-header">
-          Contest Stats
+          Estatísticas do Concurso
         </div>
         <div class="card-body">
-          <abbr data-bs-toggle="popover" data-bs-placement="bottom" data-bs-title="Misery Index" data-bs-content="
-            This is a measure of how 'bored' contestants are. It is the average number of
-            people-minutes spent fruitlessly trying to solve problems at the end of the contest.
+          <abbr data-bs-toggle="popover" data-bs-placement="bottom" data-bs-title="Índice de Miséria" data-bs-content="
+            Esta é uma medida de quão 'entediados' os participantes estão. É o número médio de
+            minutos-pessoa gastos inutilmente a tentar resolver problemas no final do concurso.
             <br>
-            Calculated as:<br>
-            average across all teams of [3 people x (number of minutes elapsed - minute last problem solved by team t)]
-          ">Misery index</abbr>: {{misc.misery_index|number_format(0)}} minutes<br>
-          # Submissions: {{ misc.total_submissions }}<br>
-          # Accepted Submissions: {{ misc.total_accepted }} <span class="text-muted">(~{{ (misc.total_submissions>0 ? (misc.total_accepted/misc.total_submissions)*100:0)|number_format(0) }}%)</span><br>
-          # of Teams: {{ misc.num_teams }}<br>
+            Calculado como:<br>
+            média entre todas as equipas de [3 pessoas x (número de minutos decorridos - minuto em que o último problema foi resolvido pela equipa t)]
+          ">Índice de miséria</abbr>: {{misc.misery_index|number_format(0)}} minutos<br>
+          # Submissões: {{ misc.total_submissions }}<br>
+          # Submissões Aceites: {{ misc.total_accepted }} <span class="text-muted">(~{{ (misc.total_submissions>0 ? (misc.total_accepted/misc.total_submissions)*100:0)|number_format(0) }}%)</span><br>
+          # de Equipas: {{ misc.num_teams }}<br>
         </div>
       </div>
     </div>
     <div class="col-md-4 mt-3" id="graph_languages">
       <div class="card">
         <div class="card-header">
-          Language Stats
+          Estatísticas por Linguagem
             <a href="{{ path('analysis_languages', {'view': view}) }}" class="btn btn-sm btn-outline-primary">
-                <i class="fas fa-list"></i>
-                Details
+              <i class="fas fa-list"></i>
+              Detalhes
             </a>
         </div>
         <div class="card-body">
@@ -74,7 +74,7 @@ $(function() {
     <div class="col-md-5 mt-3" id="graph_problems">
       <div class="card">
         <div class="card-header">
-          Problems Attempted/Solved
+          Problemas Tentados/Resolvidos
         </div>
         <div class="card-body">
           <svg style="height: 300px"></svg>
@@ -84,7 +84,7 @@ $(function() {
     <div class="col-md-12 mt-3" id="graph_submissions">
       <div class="card">
         <div class="card-header">
-          Submissions Over Time
+          Submissões ao Longo do Tempo
         </div>
         <div class="card-body">
         <svg style="height: 400px"></svg>
@@ -96,19 +96,19 @@ $(function() {
     <div class="col-md-6 mt-3 mb-3">
       <div class="card">
         <div class="card-header">
-          Problems
+          Problemas
         </div>
         <div class="card-body tablecard">
           <table class="table table-sm table-striped table-hover table-full-clickable-cell">
             <thead>
               <tr>
                 <th scope="col">ID</th>
-                <th scope="col">name</th>
-                <th scope="col">time<br>limit</th>
-                <th scope="col">memory<br>limit</th>
-                <th scope="col">test<br>cases</th>
-                <th scope="col"># <br>attempts/solutions</th>
-                <th scope="col"># teams<br>attempted/solved</th>
+                <th scope="col">nome</th>
+                <th scope="col">limite<br>de tempo</th>
+                <th scope="col">limite<br>de memória</th>
+                <th scope="col">casos<br>de teste</th>
+                <th scope="col"># <br>tentativas/soluções</th>
+                <th scope="col"># equipas<br>tentadas/resolvidas</th>
               </tr>
             </thead>
             <tbody>
@@ -133,18 +133,18 @@ $(function() {
     <div class="col-md-6 mt-3 mb-3">
       <div class="card">
         <div class="card-header">
-          Teams
+          Equipas
         </div>
         <div class="card-body tablecard">
           <table class="table table-sm table-striped table-hover table-full-clickable-cell">
             <thead>
               <tr>
                 <th scope="col">ID</th>
-                <th scope="col">affiliation</th>
-                <th scope="col" style="max-width: 200px">name</th>
-                <th scope="col">#<br>submitted/correct</th>
-                <th scope="col"># problems<br>attempted/solved</th>
-                <th scope="col">Misery<br>Index</th>
+                <th scope="col">afiliação</th>
+                <th scope="col" style="max-width: 200px">nome</th>
+                <th scope="col">#<br>enviado/correto</th>
+                <th scope="col"># problemas<br>tentados/resolvidos</th>
+                <th scope="col">Índice<br>de Miséria</th>
               </tr>
             </thead>
             <tbody>
@@ -170,18 +170,18 @@ $(function() {
       <div class="col-md-6 mt-3 mb-3">
           <div class="card">
               <div class="card-header">
-                  Delayed Judgings (by more than {{ delayed_judgings.delay }}s)
+                  Julgamentos Atrasados (em mais de {{ delayed_judgings.delay }}s)
               </div>
               <div class="card-body tablecard">
                   {% if delayed_judgings.data|length > 0 %}
                       <table class="table table-sm table-striped table-hover table-full-clickable-cell">
                           <thead>
                           <tr>
-                              <th scope="col">submit ID</th>
-                              <th scope="col">judging ID</th>
-                              <th scope="col">submit time</th>
-                              <th scope="col">num judgings</th>
-                              <th scope="col">time to<br/>first judging</th>
+                              <th scope="col">ID da submissão</th>
+                              <th scope="col">ID do julgamento</th>
+                              <th scope="col">hora da submissão</th>
+                              <th scope="col">nº de julgamentos</th>
+                              <th scope="col">tempo para<br/>primeiro julgamento</th>
                           </tr>
                           </thead>
                           <tbody>
@@ -199,10 +199,10 @@ $(function() {
                           </tbody>
                       </table>
                       {% if delayed_judgings.overflow > 0 %}
-                          <div class="alert alert-warning">There are {{ delayed_judgings.overflow }} more delayed judgings which are not shown.</div>
+                          <div class="alert alert-warning">Existem mais {{ delayed_judgings.overflow }} julgamentos atrasados que não são mostrados.</div>
                       {% endif %}
                   {% else %}
-                      <div class="alert alert-warning">There are no judgings delayed so far.</div>
+                      <div class="alert alert-warning">Não há julgamentos atrasados até agora.</div>
                   {% endif %}
               </div>
           </div>
@@ -212,14 +212,14 @@ $(function() {
 <script>
 {%
 set colors = {
-  'correct':        '#01df01',
-  'wrong-answer':   'red',
-  'timelimit':      'orange',
-  'run-error':      '#ff3399',
+  'correct':         '#01df01',
+  'wrong-answer':    'red',
+  'timelimit':       'orange',
+  'run-error':       '#ff3399',
   'compiler-error': 'grey',
-  'no-output':      'purple',
-  'frozen':         'blue',
-  'output-limit':   'black',
+  'no-output':       'purple',
+  'frozen':          'blue',
+  'output-limit':    'black',
 }
 %}
 
@@ -230,7 +230,7 @@ set colors = {
 // mutlibar, one for attempts, one for solutions
 var language_stats = [
   {
-    key: "Attempted",
+    key: "Tentativas",
     color: 'red',
     values: [
       {% for lang,count in misc.language_stats.total_submissions %}
@@ -242,7 +242,7 @@ var language_stats = [
     ]
   },
   {
-    key: "Accepted",
+    key: "Aceites",
     color: 'green',
     values: [
       {% for lang,count in misc.language_stats.total_solutions %}
@@ -267,8 +267,8 @@ nv.addGraph(function() {
       ;
   chart.yAxis
     .tickFormat(d3.format('.0f'))
-    .axisLabel('# of Submissions');
-  chart.xAxis.axisLabel("Language");
+    .axisLabel('# de Submissões');
+  chart.xAxis.axisLabel("Linguagem");
   d3.select('#graph_languages svg')
       .datum(language_stats)
       .call(chart);
@@ -283,7 +283,7 @@ nv.addGraph(function() {
 // one bar for #teams attempted(red), second bar for solved(green)
 var problem_stats = [
   {
-    key: "Attempted",
+    key: "Tentados",
     color: 'red',
     values: [
       {% for prob in problems %}
@@ -295,7 +295,7 @@ var problem_stats = [
     ]
   },
   {
-    key: "Accepted",
+    key: "Resolvidos",
     color: 'green',
     values: [
       {% for prob in problems %}
@@ -320,8 +320,8 @@ nv.addGraph(function() {
       ;
   chart.yAxis
     .tickFormat(d3.format('.0f'))
-    .axisLabel('# of Teams');
-  chart.xAxis.axisLabel("Problem");
+    .axisLabel('# de Equipas');
+  chart.xAxis.axisLabel("Problema");
   d3.select('#graph_problems svg')
       .datum(problem_stats)
       .call(chart);

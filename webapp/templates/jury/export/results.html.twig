@@ -1,16 +1,16 @@
 {% extends 'jury/export/layout.html.twig' %}
 
 {% block body %}
-    <h2>Awards</h2>
+    <h2>Prémios</h2>
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">Place</th>
-            <th scope="col">Team</th>
-            <th scope="col">Award</th>
-            <th scope="col">Solved problems</th>
-            <th scope="col">Total time</th>
-            <th scope="col">Time of last accepted submission</th>
+            <th scope="col">Lugar</th>
+            <th scope="col">Equipa</th>
+            <th scope="col">Prémio</th>
+            <th scope="col">Problemas resolvidos</th>
+            <th scope="col">Tempo total</th>
+            <th scope="col">Hora da última submissão aceite</th>
         </tr>
         </thead>
         <tbody>
@@ -31,7 +31,7 @@
         {% if ranked[award] is defined %}
             <h2>
                 {% if award == 'Ranked' %}
-                    Other ranked teams
+                    Outras equipas classificadas
                 {% else %}
                     {{ award }}
                 {% endif %}
@@ -39,9 +39,9 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">Rank</th>
-                    <th scope="col">Team</th>
-                    <th scope="col">Solved problems</th>
+                    <th scope="col">Classificação</th>
+                    <th scope="col">Equipa</th>
+                    <th scope="col">Problemas resolvidos</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -57,7 +57,7 @@
         {% endif %}
     {% endfor %}
 
-    <h2>Honorable mentions</h2>
+    <h2>Menções honrosas</h2>
     <table class="table">
         <tbody>
         {% for row in honorable|batch(2) %}
@@ -65,66 +65,6 @@
                 {% for team in row %}
                     <td>{{ team }}</td>
                 {% endfor %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <h2>Region winners</h2>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Region</th>
-            <th scope="col">Team</th>
-            <th scope="col">Rank</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for row in regionWinners %}
-            <tr>
-                <th scope="row">{{ row.group }}</th>
-                <td>{{ row.team }}</td>
-                <td>{{ row.rank }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <h2>First to solve</h2>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Problem</th>
-            <th scope="col">Team</th>
-            <th scope="col">Rank</th>
-            <th scope="col">Time</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for row in firstToSolve %}
-            <tr>
-                <th scope="row">{{ row.problem }}: {{ row.problem_name }}</th>
-                <td>
-                    {% if row.team is not null %}
-                        {{ row.team }}
-                    {% else %}
-                        <i>Not solved</i>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if row.rank is not null %}
-                        {{ row.rank }}
-                    {% else %}
-                        <i>-</i>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if row.time is not null %}
-                        {{ row.time }}
-                    {% else %}
-                        <i>-</i>
-                    {% endif %}
-                </td>
             </tr>
         {% endfor %}
         </tbody>
